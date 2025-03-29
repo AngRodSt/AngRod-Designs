@@ -1,17 +1,32 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Grid from "@/components/grid";
 import ProductGridItems from "@/components/grid/product-grid-items";
 import { defaultSort, sorting } from "@/lib/constants";
 import { getCollectionProducts } from "@/lib/shopify";
 
+type SegmentParams<T extends object = any> = T extends Record<string, any>
+    ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }
+    : T
+
 export default async function CategoryPage({
     params,
     searchParams,
 }: {
-    params: { collection?: string };  
-    searchParams?: { [key: string]: string | string[] | undefined };
+    params: Promise<SegmentParams<{ collection: string }>>;
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-    const collection = params?.collection ?? ""; 
-    const sort = searchParams?.sort ? String(searchParams.sort) : undefined; 
+
+    const resolvedParams = await params;
+    const resolvedSearchParams = await searchParams;
+
+    const collection = resolvedParams?.collection
+        ? Array.isArray(resolvedParams.collection)
+            ? resolvedParams.collection[0]
+            : resolvedParams.collection
+        : "";
+
+    const sortParam = resolvedSearchParams?.sort;
+    const sort = sortParam ? (Array.isArray(sortParam) ? sortParam[0] : sortParam) : undefined;
 
     const { sortKey, reverse } =
         sorting.find((item) => item.slug === sort) || defaultSort;
@@ -24,7 +39,7 @@ export default async function CategoryPage({
 
     return (
         <>
-        <h1 className="text-4xl uppercase mb-16">{collection}</h1>
+            <h1 className="text-4xl uppercase mb-16">{collection}</h1>
             <section>
                 {products.length === 0 ? (
                     <p className="py-3 text-lg">No products found in this collection</p>

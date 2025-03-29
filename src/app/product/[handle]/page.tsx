@@ -1,59 +1,69 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GridTileImage } from "@/components/grid/tile";
 import Gallery from "@/components/product/gallery";
 import { ProductProvider } from "@/components/product/product-context";
 import { ProductDescription } from "@/components/product/product-description";
-import { HIDDEN_PRODUCT_TAG } from "@/lib/constants";
+// import { HIDDEN_PRODUCT_TAG } from "@/lib/constants";
 import { getProduct, getProductRecommendations } from "@/lib/shopify";
 import { Image } from "@/lib/shopify/types";
-import { Metadata } from "next";
+// import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-export async function generateMetadata({
-    params,
-}: {
-    params: { handle: string };
-}): Promise<Metadata> {
-    const product = await getProduct(params.handle);
 
-    if (!product) return notFound();
+// export async function generateMetadata({
+//     params,
+// }: {
+//     params: { handle: string };
+// }): Promise<Metadata> {
+//     const product = await getProduct(params.handle);
 
-    const { url, width, height, altText: alt } = product.featuredImage || {};
-    const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
+//     if (!product) return notFound();
 
-    return {
-        title: product.seo.title || product.title,
-        description: product.seo.description || product.description,
-        robots: {
-            index: indexable,
-            follow: indexable,
-            googleBot: {
-                index: indexable,
-                follow: indexable,
-            },
-        },
-        openGraph: url
-            ? {
-                images: [
-                    {
-                        url,
-                        width,
-                        height,
-                        alt,
-                    },
-                ],
-            }
-            : null,
-    };
+//     const { url, width, height, altText: alt } = product.featuredImage || {};
+//     const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
+
+//     return {
+//         title: product.seo.title || product.title,
+//         description: product.seo.description || product.description,
+//         robots: {
+//             index: indexable,
+//             follow: indexable,
+//             googleBot: {
+//                 index: indexable,
+//                 follow: indexable,
+//             },
+//         },
+//         openGraph: url
+//             ? {
+//                 images: [
+//                     {
+//                         url,
+//                         width,
+//                         height,
+//                         alt,
+//                     },
+//                 ],
+//             }
+//             : null,
+//     };
+// }
+
+type SegmentParams<T extends object = any> = T extends Record<string, any>
+    ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }
+    : T
+export interface PageProps {
+    params?: Promise<SegmentParams<{ handle: string }>>;
+    searchParams?: Promise<any>;
 }
 
-export default async function ProductPage({
-    params,
-}: {
-    params: { handle: string };
-}) {
-    const product = await getProduct(params.handle);
+
+export default async function ProductPage({ params }: PageProps) {
+    const resolvedParams = await params;
+    const handle = resolvedParams?.handle;
+    if (!handle || Array.isArray(handle)) return notFound();
+    const product = await getProduct(handle);
     if (!product) return notFound();
     return (
         <ProductProvider>
