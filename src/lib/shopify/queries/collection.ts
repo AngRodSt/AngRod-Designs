@@ -1,6 +1,5 @@
-import { collectionFragment } from "../fragments/collection";
-import { productFragment } from "../fragments/product";
-
+import { collectionFragment } from '../fragments/collection';
+import { productFragment } from '../fragments/product';
 
 export const getCollectionsQuery = /* GraphQL */ `
   query getCollections {
@@ -14,7 +13,6 @@ export const getCollectionsQuery = /* GraphQL */ `
   }
   ${collectionFragment}
 `;
-
 
 export const getCollectionProductsQuery = /* GraphQL */ `
   query getCollectionProducts(

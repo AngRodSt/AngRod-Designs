@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import { GridTileImage } from "../grid/tile";
-import { useProduct, useUpdateURL } from "./product-context";
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { GridTileImage } from '../grid/GridTileImage';
+import { useProduct, useUpdateURL } from '../../context/ProductContext';
 
+//Layout for the  imagens gallery of a product
 export default function Gallery({
   images,
 }: {
@@ -19,7 +20,7 @@ export default function Gallery({
     imageIndex === 0 ? images.length - 1 : imageIndex - 1;
 
   const buttonClassName =
-    "h-full px-6 transition-all ease-in-out hover:scale-110 hover:text-black dark:hover:text-white flex items-center justify-center";
+    'h-full px-6 transition-all ease-in-out hover:scale-110 hover:text-black dark:hover:text-white flex items-center justify-center';
 
   return (
     <form>
