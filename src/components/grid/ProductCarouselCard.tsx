@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
-import Label from '../product/Label';
+import Label from '@/components/product/Label';
 
 interface Product {
   handle: string;

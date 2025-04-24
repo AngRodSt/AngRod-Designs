@@ -7,11 +7,11 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '@/context/CartContext';
 import { createUrl } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import Price from '../product/Price';
+import Price from '@/components/product/Price';
 import OpenCart from './OpenCart';
 import CloseCart from './CloseCart';
 import { DEFAULT_OPTION } from '@/lib/constants';
