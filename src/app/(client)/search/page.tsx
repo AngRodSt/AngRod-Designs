@@ -27,6 +27,7 @@ export default async function SearchPage({
 
   //Fetching the products
   let products: Product[] = [];
+  let errorMessage = '';
   try {
     products = await getProducts({
       sortKey,
@@ -34,12 +35,21 @@ export default async function SearchPage({
       query: Array.isArray(searchValue) ? searchValue[0] : searchValue,
     });
   } catch (error) {
-    console.error('Error fetching products:', error);
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = 'Unknown error fetching products';
+    }
   }
   const resultsText = products.length > 1 ? 'results' : 'result';
 
   return (
     <>
+      {errorMessage && (
+        <div className="bg-red-100 text-red-800 p-4 mb-4">
+          <strong>Error:</strong> {errorMessage}
+        </div>
+      )}
       <main className="flex flex-col">
         <div className=" relative flex h-[30rem] mb-10 z-20">
           <div className="absolute left-0 w-full h-[30rem] bg-black opacity-50 z-10" />
