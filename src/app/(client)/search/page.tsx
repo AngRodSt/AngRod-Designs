@@ -3,6 +3,7 @@ import ProductGridItems from '@/components/grid/ProductGridItems';
 import { defaultSort, sorting } from '@/lib/constants';
 import { getProducts } from '@/lib/shopify';
 import ProductCarousel from '@/components/grid/ProductCarousel';
+import { Product } from '@/lib/shopify/types';
 
 export const metadata = {
   title: 'Search',
@@ -25,11 +26,16 @@ export default async function SearchPage({
     sorting.find((item) => item.slug === sortParam) || defaultSort;
 
   //Fetching the products
-  const products = await getProducts({
-    sortKey,
-    reverse,
-    query: Array.isArray(searchValue) ? searchValue[0] : searchValue,
-  });
+  let products: Product[] = [];
+  try {
+    products = await getProducts({
+      sortKey,
+      reverse,
+      query: Array.isArray(searchValue) ? searchValue[0] : searchValue,
+    });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
   const resultsText = products.length > 1 ? 'results' : 'result';
 
   return (
